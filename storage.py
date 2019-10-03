@@ -1,3 +1,4 @@
+import config
 import json
 from datetime import datetime
 from google.cloud import storage
@@ -14,7 +15,7 @@ def upload_to_bucket(contents):
         contents (Object): The contents to put in the bucket
     """
     assert isinstance(contents, dict)
-    bucket_name = "my-different-bucket"
+    bucket_name = config.BUCKET_NAME
     bucket = storage_client.lookup_bucket(bucket_name)
 
     if bucket is None:
@@ -62,9 +63,11 @@ def generate_filename():
         Example:
             137281912.json
     """
+    date_format = "%Y%m%d%H%M%S"
+    timestamp = datetime.now().timestamp()
+    date = datetime.fromtimestamp(timestamp).strftime(date_format)
 
-    timestamp = int(datetime.now().timestamp())
-    return f"{timestamp}.json"
+    return f"{date}.json"
 
 
 def write_to_file(filename, timestamp):
@@ -88,7 +91,7 @@ def write_to_file(filename, timestamp):
 
 
 if __name__ == "__main__":
-    bucket_name = "my-different-bucket"
+    bucket_name = config.BUCKET_NAME
     bucket = storage_client.lookup_bucket(bucket_name)
 
     if bucket is None:
