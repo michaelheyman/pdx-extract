@@ -14,7 +14,9 @@ def upload_to_bucket(contents):
     Parameters:
         contents (Object): The contents to put in the bucket
     """
-    assert isinstance(contents, dict)
+    assert isinstance(
+        contents, (dict, list)
+    ), f"Expected dict/list but got {type(contents)}"
     bucket_name = config.BUCKET_NAME
     bucket = storage_client.lookup_bucket(bucket_name)
 
