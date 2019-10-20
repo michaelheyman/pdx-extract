@@ -1,10 +1,10 @@
 import json
-from app import config
 from datetime import datetime
-from google.cloud import storage
-from google.cloud import exceptions
 
-storage_client = storage.Client()
+from google.cloud import storage
+
+from app import config
+from app import utils
 
 
 def upload_to_bucket(contents):
@@ -17,6 +17,7 @@ def upload_to_bucket(contents):
     assert isinstance(
         contents, (dict, list)
     ), f"Expected dict/list but got {type(contents)}"
+    storage_client = storage.Client()
     bucket_name = config.BUCKET_NAME
     bucket = storage_client.lookup_bucket(bucket_name)
 
@@ -26,7 +27,7 @@ def upload_to_bucket(contents):
     else:
         print("Bucket {} already exists.".format(bucket.name))
 
-    filename = generate_filename()
+    filename = utils.generate_filename()
 
     lambda_filename = write_lambda_file(filename, contents)
 
@@ -57,42 +58,8 @@ def write_lambda_file(filename, contents):
     return lambda_filename
 
 
-def generate_filename():
-    """ Generates a filename to be put into a Storage bucket.
-
-    Returns:
-        String: A filename in the format epoc.json
-        Example:
-            137281912.json
-    """
-    date_format = "%Y%m%d%H%M%S"
-    timestamp = datetime.now().timestamp()
-    date = datetime.fromtimestamp(timestamp).strftime(date_format)
-
-    return f"{date}.json"
-
-
-def write_to_file(filename, timestamp):
-    """ Writes a timestamp and current date to a file.
-
-    Only used when testing storage.py
-
-    Parameters:
-        filename (String): The filename to write the data to.
-        timestamp (Int):   The epoch timestamp.
-    """
-    with open(filename, "w") as outfile:
-        json.dump(
-            {
-                "timestamp": timestamp,
-                "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            },
-            outfile,
-        )
-    print(f"file: {outfile}")
-
-
 if __name__ == "__main__":
+    storage_client = storage.Client()
     bucket_name = config.BUCKET_NAME
     bucket = storage_client.lookup_bucket(bucket_name)
 
@@ -105,8 +72,6 @@ if __name__ == "__main__":
     timestamp = int(datetime.now().timestamp())
     filename = f"{timestamp}.json"
     file_contents = json.dumps({"timestamp": timestamp})
-
-    write_to_file(filename, timestamp)
 
     blob = bucket.blob(filename)
     blob.upload_from_filename(filename)
