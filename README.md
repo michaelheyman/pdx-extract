@@ -41,6 +41,31 @@ Run the application by executing
 python -m app
 ```
 
+## Testing
+
+Ensure that the necessary testing packages are installed:
+
+```bash
+pip install pytest pytest-cov pytest-asyncio asynctest
+```
+
+Run `pytest` with verbose output:
+
+```bash
+pytest -vv
+```
+
+Run `pytest` with coverage:
+
+```bash
+pytest --cov=app tests/
+```
+
+```bash
+pytest --cov-report html --cov=app tests/
+```
+
+
 ## Deploying Cloud Function
 
 Run the following command from the root of the project to deploy the Cloud Function
