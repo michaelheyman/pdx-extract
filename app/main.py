@@ -1,7 +1,7 @@
 from pyppeteer import launch
 
+from app import storage
 from app.logger import logger
-from app.storage import upload_to_bucket
 
 INIT_URL = "https://www.google.com"
 
@@ -39,4 +39,5 @@ async def run():
     payload = {"timestamp": timestamp}
     logger.debug(timestamp)
     logger.debug("Finished")
-    upload_to_bucket(payload)
+    storage.upload_to_bucket(payload)
+    return payload
