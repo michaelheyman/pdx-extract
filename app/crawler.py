@@ -1,7 +1,7 @@
 import requests
 import time
 import config
-from logger import logger
+from app import logger
 from pyppeteer import launch
 from urllib.parse import urljoin
 

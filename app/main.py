@@ -1,11 +1,11 @@
 import asyncio
 import json
-import sanitize
+from app import sanitize
 import pprint
 import requests
-from logger import logger
+from app.logger import logger
+from app.storage import upload_to_bucket
 from pyppeteer import launch
-from storage import upload_to_bucket
 
 INIT_URL = "https://www.google.com"
 
@@ -41,8 +41,8 @@ async def run(context):
 
     timestamp = await page.evaluate("new Date().toISOString()")
     payload = {"timestamp": timestamp}
-    logger.log_text(timestamp)
-    logger.log_text("Finished")
+    logger.debug(timestamp)
+    logger.debug("Finished")
     upload_to_bucket(payload)
 
 
@@ -60,7 +60,3 @@ async def mockRun(context):
             subjects.append(sanitized_data)
 
     upload_to_bucket(subjects)
-
-
-if __name__ == "__main__":
-    asyncio.get_event_loop().run_until_complete(mockRun(None))

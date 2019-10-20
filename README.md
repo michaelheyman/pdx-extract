@@ -1,6 +1,33 @@
-# POC Google Function
+# poc-google-function
 
-POC to show Cloud Functions depositing JSON in Cloud Storage.
+[poc-google-function](https://github.com/michaelheyman/poc-google-function/) is part of the
+[pdx-schedule](https://github.com/michaelheyman/pdx-schedule/) project.
+
+Runs a Cloud Function that scrapes the schedule information from Portland State.
+It then stores the JSON representation of the schedule into a Cloud Storage bucket.
+
+## Setup
+
+### Create Virtual Environment
+
+```bash
+pyenv virtualenv 3.7.3 poc-google-function-3.7.3
+pyenv activate poc-google-function-3.7.3
+```
+
+### Install Requirements
+
+```bash
+pip -r install requirements.txt
+```
+
+## Running
+
+Run the application by executing
+
+```bash
+python -m app
+```
 
 ## Deploying
 

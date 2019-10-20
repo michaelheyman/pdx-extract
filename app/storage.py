@@ -1,5 +1,5 @@
-import config
 import json
+from app import config
 from datetime import datetime
 from google.cloud import storage
 from google.cloud import exceptions
