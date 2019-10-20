@@ -21,6 +21,18 @@ pyenv activate poc-google-function-3.7.3
 pip -r install requirements.txt
 ```
 
+### Install Git Hooks
+
+See [.pre-commit-config.yaml](.pre-commit-config.yaml) for information on which hooks are configured.
+
+```bash
+pre-commit install
+```
+
+```bash
+pre-commit install -t pre-push
+```
+
 ## Running
 
 Run the application by executing
