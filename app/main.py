@@ -1,4 +1,4 @@
-from pyppeteer import launch
+import pyppeteer
 
 from app import storage
 from app.logger import logger
@@ -15,7 +15,7 @@ async def initialize_browser():
         Browser: A Pyppeteer browser.
     """
     args = ["--no-sandbox", "--disable-setuid-sandbox", "--ignore-certificate-errors"]
-    browser = await launch(args=args, headless=True)
+    browser = await pyppeteer.launch(args=args, headless=True)
 
     return browser
 

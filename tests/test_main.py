@@ -13,6 +13,17 @@ def set_async_result(mock, result):
 
 
 @pytest.mark.asyncio
+@asynctest.patch("pyppeteer.launch")
+async def test_initialize_browser_returns_browser(mock_launch):
+    mock_launch = set_async_result(mock_launch, "mock-browser")
+
+    browser = await main.initialize_browser()
+
+    mock_launch.assert_called
+    assert browser == "mock-browser"
+
+
+@pytest.mark.asyncio
 @asynctest.patch("app.storage.upload_to_bucket")
 @asynctest.patch("app.main.get_page")
 @asynctest.patch("app.main.initialize_browser")
