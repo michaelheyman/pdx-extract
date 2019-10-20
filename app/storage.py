@@ -1,5 +1,4 @@
 import json
-from datetime import datetime
 
 from google.cloud import storage
 
@@ -56,25 +55,3 @@ def write_lambda_file(filename, contents):
     print(f"file: {outfile}")
 
     return lambda_filename
-
-
-if __name__ == "__main__":
-    storage_client = storage.Client()
-    bucket_name = config.BUCKET_NAME
-    bucket = storage_client.lookup_bucket(bucket_name)
-
-    if bucket is None:
-        bucket = storage_client.create_bucket(bucket_name)
-        print("Bucket {} created.".format(bucket.name))
-    else:
-        print("Bucket {} already exists.".format(bucket.name))
-
-    timestamp = int(datetime.now().timestamp())
-    filename = f"{timestamp}.json"
-    file_contents = json.dumps({"timestamp": timestamp})
-
-    blob = bucket.blob(filename)
-    blob.upload_from_filename(filename)
-    blob.upload_from_string(json.dumps(file_contents), content_type="application/json")
-
-    print("File {} uploaded to {}.".format(filename, bucket_name))
