@@ -1,18 +1,14 @@
-import asyncio
-import json
-from app import sanitize
-import pprint
-import requests
+from pyppeteer import launch
+
 from app.logger import logger
 from app.storage import upload_to_bucket
-from pyppeteer import launch
 
 INIT_URL = "https://www.google.com"
 
 
 async def initialize_browser():
     """Initializes pyppeteer browser with options.
-    
+
     Doesn't open or close browser, that responsibility is left to the caller.
 
     Returns:
@@ -35,7 +31,7 @@ async def get_page(browser):
     return page
 
 
-async def run(context):
+async def run():
     browser = await initialize_browser()
     page = await get_page(browser)
 
@@ -44,19 +40,3 @@ async def run(context):
     logger.debug(timestamp)
     logger.debug("Finished")
     upload_to_bucket(payload)
-
-
-async def mockRun(context):
-    with open("response.json") as json_file:
-        terms = json.loads(json_file.read())
-
-    subjects = []
-    for term in terms:
-        for subject in term:
-            pp = pprint.PrettyPrinter(indent=2)
-            # pp.pprint(terms[0]["data"][0])
-            sanitized_data = sanitize.get_course_data(terms[0]["data"][0])
-            pp.pprint(sanitized_data)
-            subjects.append(sanitized_data)
-
-    upload_to_bucket(subjects)
