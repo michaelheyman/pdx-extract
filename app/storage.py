@@ -4,6 +4,7 @@ from google.cloud import storage
 
 from app import config
 from app import utils
+from app.logger import logger
 
 
 def upload_to_bucket(contents):
@@ -22,9 +23,9 @@ def upload_to_bucket(contents):
 
     if bucket is None:
         bucket = storage_client.create_bucket(bucket_name)
-        print("Bucket {} created.".format(bucket.name))
+        logger.debug("Bucket {} created.".format(bucket.name))
     else:
-        print("Bucket {} already exists.".format(bucket.name))
+        logger.debug("Bucket {} already exists.".format(bucket.name))
 
     filename = utils.generate_filename()
 
@@ -34,7 +35,7 @@ def upload_to_bucket(contents):
     # uploads the file in the cloud function to cloud storage
     blob.upload_from_filename(lambda_filename)
 
-    print("File {} uploaded to {}.".format(filename, bucket_name))
+    logger.debug("File {} uploaded to {}.".format(filename, bucket_name))
 
 
 def write_lambda_file(filename, contents):
@@ -51,7 +52,5 @@ def write_lambda_file(filename, contents):
 
     with open(lambda_filename, "w") as outfile:
         json.dump(contents, outfile)
-
-    print(f"file: {outfile}")
 
     return lambda_filename

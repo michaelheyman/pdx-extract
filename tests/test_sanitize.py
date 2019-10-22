@@ -6,7 +6,6 @@ def test_get_courses():
     subjects_json = data.subjects_json
     courses = sanitize.get_courses(subjects_json)
 
-    print(courses)
     assert len(courses) == 2
     assert courses[0]["number"] == "CS 161"
     assert courses[1]["number"] == "CS 457"

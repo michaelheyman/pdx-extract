@@ -139,7 +139,6 @@ async def run():
         subjects = get_subjects(cookies, unique_session_id, term["code"])
         subjects_json = await get_subjects_json(subjects, term, cookies, page)
         courses = sanitize.get_courses(subjects_json)
-        print(f"appending courses: {courses}")
         payload.append(courses)
 
     storage.upload_to_bucket(payload)
