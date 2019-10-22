@@ -1,6 +1,6 @@
-# poc-google-function
+# pdx-extract
 
-[poc-google-function](https://github.com/michaelheyman/poc-google-function/) is part of the
+[pdx-extract](https://github.com/michaelheyman/pdx-extract/) is part of the
 [pdx-schedule](https://github.com/michaelheyman/pdx-schedule/) project.
 
 Runs a Cloud Function that scrapes the schedule information from Portland State.
@@ -11,8 +11,8 @@ It then stores the JSON representation of the schedule into a Cloud Storage buck
 ### Create Virtual Environment
 
 ```bash
-pyenv virtualenv 3.7.3 poc-google-function-3.7.3
-pyenv activate poc-google-function-3.7.3
+pyenv virtualenv 3.7.3 pdx-extract-3.7.3
+pyenv activate pdx-extract-3.7.3
 ```
 
 ### Install Requirements
@@ -71,7 +71,7 @@ pytest --cov-report html --cov=app tests/
 Run the following command from the root of the project to deploy the Cloud Function
 
 ```bash
-gcloud functions deploy scrape --memory=1024MB --runtime python37 --trigger-http --region us-central1
+gcloud functions deploy extract --memory=1024MB --runtime python37 --trigger-http --region us-central1
 ```
 
 There is the potential to reduce the memory requirements of the Function.
