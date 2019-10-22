@@ -1,6 +1,14 @@
 import html
 
 
+def get_courses(subjects_json):
+    courses = []
+    for discipline in subjects_json:
+        for course in discipline:
+            courses.append(get_course_data(course))
+    return courses
+
+
 def get_course_data(course):
     course_data = dict()
 

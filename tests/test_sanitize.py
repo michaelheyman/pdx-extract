@@ -1,40 +1,22 @@
 from app import sanitize
+from tests import data
 
-original_course = {
-    "id": 270591,
-    "term": "201904",
-    "termDesc": "Fall 2019 Quarter",
-    "courseReferenceNumber": "10883",
-    "courseNumber": "161",
-    "subject": "CS",
-    "subjectDescription": "Computer Science",
-    "courseTitle": "INTRO PROGRAM &amp; PROB SOLVING",
-    "creditHours": 4,
-    "subjectCourse": "CS161",
-    "faculty": [
-        {"displayName": "Ely, David D", "emailAddress": "ely@pdx.edu", "term": "201904"}
-    ],
-    "meetingsFaculty": [
-        {
-            "meetingTime": {
-                "beginTime": "1000",
-                "endTime": "1150",
-                "friday": False,
-                "monday": False,
-                "saturday": False,
-                "sunday": False,
-                "thursday": True,
-                "tuesday": True,
-                "wednesday": False,
-            }
-        }
-    ],
-}
+
+def test_get_courses():
+    subjects_json = data.subjects_json
+    courses = sanitize.get_courses(subjects_json)
+
+    print(courses)
+    assert len(courses) == 2
+    assert courses[0]["number"] == "CS 161"
+    assert courses[1]["number"] == "CS 457"
+    assert courses[0]["instructor"] == "David D Ely"
+    assert courses[1]["instructor"] == "Mark P Jones"
 
 
 def test_get_course_data_returns_sanitized_data():
     # TODO: separate this into smaller tests
-    sanitized_course = sanitize.get_course_data(original_course)
+    sanitized_course = sanitize.get_course_data(data.original_course)
 
     assert sanitized_course["number"] == "CS 161"
     assert sanitized_course["name"] == "INTRO PROGRAM & PROB SOLVING"

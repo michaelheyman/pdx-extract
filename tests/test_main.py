@@ -5,45 +5,8 @@ import asynctest
 import pytest
 
 from app import main
+from tests import data
 from tests import utils
-
-
-example_schedule = [
-    {
-        "id": 270591,
-        "term": "201904",
-        "termDesc": "Fall 2019 Quarter",
-        "courseReferenceNumber": "10883",
-        "courseNumber": "161",
-        "subject": "CS",
-        "subjectDescription": "Computer Science",
-        "courseTitle": "INTRO PROGRAM &amp; PROB SOLVING",
-        "creditHours": 4,
-        "subjectCourse": "CS161",
-        "faculty": [
-            {
-                "displayName": "Ely, David D",
-                "emailAddress": "ely@pdx.edu",
-                "term": "201904",
-            }
-        ],
-        "meetingsFaculty": [
-            {
-                "meetingTime": {
-                    "beginTime": "1000",
-                    "endTime": "1150",
-                    "friday": False,
-                    "monday": False,
-                    "saturday": False,
-                    "sunday": False,
-                    "thursday": True,
-                    "tuesday": True,
-                    "wednesday": False,
-                }
-            }
-        ],
-    }
-]
 
 
 @mock.patch("requests.post")
@@ -88,13 +51,13 @@ def test_get_schedule_json_returns_ok_when_good_response(mock_requests):
     unique_session_id = "abcdef1234567890"
     cookies = {"JSESSIONID": "CF6813D3F9BFD1ABEEEF47E2FB094926"}
     response = requests.Response()
-    response._content = bytearray(json.dumps(example_schedule), "utf-8")
+    response._content = bytearray(json.dumps(data.example_schedule), "utf-8")
     response.status_code = 200
     mock_requests.return_value = response
 
     schedule_json = main.get_schedule_json(subject, term, unique_session_id, cookies)
 
-    assert schedule_json == example_schedule
+    assert schedule_json == data.example_schedule
 
 
 @mock.patch("requests.get")
