@@ -1,6 +1,6 @@
 import pyppeteer
 
-INIT_URL = "https://www.google.com"
+from app.urls import INIT_URL
 
 
 async def initialize():

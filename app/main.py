@@ -1,20 +1,12 @@
 import time
-from urllib.parse import urljoin
 
 import requests
 
 from app import config
 from app import pyppeteer
 from app import storage
+from app import urls
 from app.logger import logger
-
-BASE_URL = "https://app.banner.pdx.edu/StudentRegistrationSsb/ssb/"
-INIT_URL = urljoin(BASE_URL, "term/termSelection?mode=search")
-CLASS_URL = urljoin(BASE_URL, "classSearch/classSearch")
-TERMS_URL = urljoin(BASE_URL, "classSearch/getTerms")
-SEARCH_URL = urljoin(BASE_URL, "term/search?mode=search")
-SCHEDULE_URL = urljoin(BASE_URL, "searchResults/searchResults")
-SUBJECTS_URL = urljoin(BASE_URL, "classSearch/get_subject")
 
 
 def authenticate_current_session(term, unique_session_id, cookies):
@@ -37,7 +29,10 @@ def authenticate_current_session(term, unique_session_id, cookies):
         "uniqueSessionId": unique_session_id,
     }
     return requests.post(
-        SEARCH_URL, headers={"referer": INIT_URL}, cookies=cookies, params=payload
+        urls.SEARCH_URL,
+        headers={"referer": urls.INIT_URL},
+        cookies=cookies,
+        params=payload,
     )
 
 
@@ -63,7 +58,10 @@ def get_schedule_json(subject, term, unique_session_id, cookies):
         "sortDirection": "asc",
     }
     res = requests.get(
-        SCHEDULE_URL, headers={"referer": CLASS_URL}, cookies=cookies, params=payload
+        urls.SCHEDULE_URL,
+        headers={"referer": urls.CLASS_URL},
+        cookies=cookies,
+        params=payload,
     )
 
     if res.ok:
@@ -91,7 +89,7 @@ def get_subjects(cookies, unique_session_id, term_date):
         # Query string params expect a timestamp with extra 3 digits
         "_:": str(int(time.time() * 1000)),
     }
-    res = requests.get(SUBJECTS_URL, cookies=cookies, params=payload)
+    res = requests.get(urls.SUBJECTS_URL, cookies=cookies, params=payload)
 
     if res.ok:
         return res.json()
@@ -114,7 +112,7 @@ def get_terms(cookies, unique_session_id):
         "offset": "1",
         "max": config.MAX_TERMS,
     }
-    res = requests.get(TERMS_URL, cookies=cookies, params=payload)
+    res = requests.get(urls.TERMS_URL, cookies=cookies, params=payload)
 
     if res.ok:
         return res.json()
