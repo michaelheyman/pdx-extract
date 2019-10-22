@@ -26,6 +26,9 @@ def get_time(record):
     except (KeyError, IndexError):
         return None
 
+    if None in (begin_time, end_time):
+        return None
+
     begin_time = begin_time[0:2] + ":" + begin_time[2:]
     end_time = end_time[0:2] + ":" + end_time[2:]
     return f"{begin_time} - {end_time}"

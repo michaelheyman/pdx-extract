@@ -98,6 +98,26 @@ def test_get_time_returns_none_when_missing_end_time():
     assert time is None
 
 
+def test_get_time_returns_none_begin_time_is_none():
+    content = {
+        "meetingsFaculty": [{"meetingTime": {"beginTime": None, "endTime": "1150"}}]
+    }
+
+    time = sanitize.get_time(content)
+
+    assert time is None
+
+
+def test_get_time_returns_none_end_time_is_none():
+    content = {
+        "meetingsFaculty": [{"meetingTime": {"beginTime": "1000", "endTime": None}}]
+    }
+
+    time = sanitize.get_time(content)
+
+    assert time is None
+
+
 def test_get_time_returns_formatted_time():
     content = {
         "meetingsFaculty": [{"meetingTime": {"beginTime": "1000", "endTime": "1150"}}]
