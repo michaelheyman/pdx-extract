@@ -205,22 +205,73 @@ def test_get_terms_returns_none_when_response_not_ok(mock_requests):
 
 @pytest.mark.asyncio
 @asynctest.patch("app.storage.upload_to_bucket")
+@asynctest.patch("app.main.get_terms")
+@asynctest.patch("app.pyppeteer.get_tokens")
 @asynctest.patch("app.pyppeteer.get_page")
 @asynctest.patch("app.pyppeteer.initialize")
-async def test_run_returns_payload(
-    mock_initialize, mock_get_page, mock_upload_to_bucket
+async def test_run_returns_empty_payload_when_no_results(
+    mock_initialize,
+    mock_get_page,
+    mock_get_tokens,
+    mock_get_terms,
+    mock_upload_to_bucket,
 ):
-    mock_initialize = utils.set_async_result(mock_initialize, [])
-    get_page = asynctest.CoroutineMock()
-    get_page.evaluate.return_value = asyncio.Future()
-    get_page.evaluate.return_value.set_result("foo")
-    mock_get_page = utils.set_async_result(mock_get_page, get_page)
+    browser = asynctest.CoroutineMock()
+    browser.close.return_value = asyncio.Future()
+    browser.close.return_value.set_result(None)
+    mock_initialize = utils.set_async_result(mock_initialize, browser)
+    mock_get_page = utils.set_async_result(mock_get_page, None)
+    mock_get_tokens.return_value = asyncio.Future()
+    mock_get_tokens.return_value.set_result(["foo", "abcdef1234567890"])
+    mock_get_terms.return_value = []
     mock_upload_to_bucket().return_value = None
 
-    result = await main.run()
+    payload = await main.run()
 
     mock_initialize.assert_called
     mock_get_page.assert_called
-    get_page.assert_called
+    mock_get_tokens.assert_called
+    mock_get_terms.assert_called
     mock_upload_to_bucket.assert_called
-    assert result == {"timestamp": "foo"}
+    assert payload == []
+
+
+@pytest.mark.asyncio
+@asynctest.patch("app.storage.upload_to_bucket")
+@asynctest.patch("app.main.get_subjects_json")
+@asynctest.patch("app.main.get_terms")
+@asynctest.patch("app.pyppeteer.get_tokens")
+@asynctest.patch("app.pyppeteer.get_page")
+@asynctest.patch("app.pyppeteer.initialize")
+async def test_run_returns_payload(
+    mock_initialize,
+    mock_get_page,
+    mock_get_tokens,
+    mock_get_terms,
+    mock_get_subjects_json,
+    mock_upload_to_bucket,
+):
+    browser = asynctest.CoroutineMock()
+    browser.close.return_value = asyncio.Future()
+    browser.close.return_value.set_result(None)
+    mock_initialize = utils.set_async_result(mock_initialize, browser)
+    mock_get_page = utils.set_async_result(mock_get_page, None)
+    mock_get_tokens.return_value = asyncio.Future()
+    mock_get_tokens.return_value.set_result(["foo", "abcdef1234567890"])
+    mock_get_terms.return_value = [
+        {"code": "201904", "description": "Fall 2019 Quarter"}
+    ]
+    mock_get_subjects_json = utils.set_async_result(
+        mock_get_subjects_json, data.subjects_json
+    )
+    mock_upload_to_bucket().return_value = None
+
+    payload = await main.run()
+
+    mock_initialize.assert_called
+    mock_get_page.assert_called
+    mock_get_tokens.assert_called
+    mock_get_terms.assert_called
+    mock_get_subjects_json.assert_called
+    mock_upload_to_bucket.assert_called
+    assert payload[0][0]["crn"] == 10883

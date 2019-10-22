@@ -4,6 +4,7 @@ import requests
 
 from app import config
 from app import pyppeteer
+from app import sanitize
 from app import storage
 from app import urls
 from app.logger import logger
@@ -124,18 +125,6 @@ def get_terms(cookies, unique_session_id):
 async def run():
     browser = await pyppeteer.initialize()
     page = await pyppeteer.get_page(browser)
-
-    timestamp = await page.evaluate("new Date().toISOString()")
-    payload = {"timestamp": timestamp}
-    logger.debug(timestamp)
-    logger.debug("Finished")
-    storage.upload_to_bucket(payload)
-    return payload
-
-
-async def crawl():
-    browser = await pyppeteer.initialize()
-    page = await pyppeteer.get_page(browser)
     session_id, unique_session_id = await pyppeteer.get_tokens(browser)
 
     if None in (session_id, unique_session_id):
@@ -145,14 +134,18 @@ async def crawl():
     cookies = dict(JSESSIONID=session_id)
     terms = get_terms(cookies, unique_session_id)
 
-    terms_json = []
+    payload = []
     for term in terms:
         subjects = get_subjects(cookies, unique_session_id, term["code"])
         subjects_json = await get_subjects_json(subjects, term, cookies, page)
-        terms_json.append(subjects_json)
+        courses = sanitize.get_courses(subjects_json)
+        print(f"appending courses: {courses}")
+        payload.append(courses)
 
-    print(f"for debugging: length of subjects: {len(subjects_json)}")
+    storage.upload_to_bucket(payload)
+
     await browser.close()
+    return payload
 
 
 async def get_subjects_json(subjects, term, cookies, page):
