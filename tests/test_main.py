@@ -239,6 +239,7 @@ async def test_run_returns_empty_payload_when_no_results(
 @pytest.mark.asyncio
 @asynctest.patch("app.storage.upload_to_bucket")
 @asynctest.patch("app.main.get_subjects_json")
+@asynctest.patch("app.main.get_subjects")
 @asynctest.patch("app.main.get_terms")
 @asynctest.patch("app.pyppeteer.get_tokens")
 @asynctest.patch("app.pyppeteer.get_page")
@@ -248,6 +249,7 @@ async def test_run_returns_payload(
     mock_get_page,
     mock_get_tokens,
     mock_get_terms,
+    mock_get_subjects,
     mock_get_subjects_json,
     mock_upload_to_bucket,
 ):
@@ -275,3 +277,4 @@ async def test_run_returns_payload(
     mock_get_subjects_json.assert_called
     mock_upload_to_bucket.assert_called
     assert payload[0][0]["crn"] == 10883
+    # error on get_subects in main where it makes a request
