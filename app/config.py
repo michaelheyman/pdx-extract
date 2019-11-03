@@ -6,7 +6,7 @@ def map_level(level):
 
     Parameters:
         level (String): The level string to be mapped.
-    
+
     Returns:
         Integer: Number that matches the logging level.
     """

@@ -1,7 +1,9 @@
-from app import config
 import logging
 from datetime import datetime
+
 from pythonjsonlogger import jsonlogger
+
+from app import config
 
 
 class CustomJsonFormatter(jsonlogger.JsonFormatter):
