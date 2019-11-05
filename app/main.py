@@ -31,7 +31,7 @@ def authenticate_current_session(term, unique_session_id, cookies):
     }
     return requests.post(
         urls.SEARCH_URL,
-        headers={"referer": urls.INIT_URL},
+        headers={"Referer": urls.INIT_URL},
         cookies=cookies,
         params=payload,
     )
@@ -60,7 +60,7 @@ def get_schedule_json(subject, term, unique_session_id, cookies):
     }
     res = requests.get(
         urls.SCHEDULE_URL,
-        headers={"referer": urls.CLASS_URL},
+        headers={"Referer": urls.CLASS_URL},
         cookies=cookies,
         params=payload,
     )
