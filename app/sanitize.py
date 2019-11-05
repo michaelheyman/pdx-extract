@@ -1,6 +1,17 @@
 import html
 
 
+days_mapping = {
+    "monday": "M",
+    "tuesday": "T",
+    "wednesday": "W",
+    "thursday": "R",
+    "friday": "F",
+    "saturday": "S",
+    "sunday": "SU",
+}
+
+
 def get_courses(subjects_json):
     """Gets courses from the subjects JSON response.
 
@@ -69,21 +80,9 @@ def get_days(record):
         return None
 
     days = ""
-
-    if meeting_time["monday"]:
-        days += "M"
-    if meeting_time["tuesday"]:
-        days += "T"
-    if meeting_time["wednesday"]:
-        days += "W"
-    if meeting_time["thursday"]:
-        days += "R"
-    if meeting_time["friday"]:
-        days += "F"
-    if meeting_time["saturday"]:
-        days += "S"
-    if meeting_time["sunday"]:
-        days += "SU"
+    for day in days_mapping.keys():
+        if meeting_time[day]:
+            days += days_mapping[day]
 
     return days
 
