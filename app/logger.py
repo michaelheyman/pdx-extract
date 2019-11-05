@@ -1,7 +1,9 @@
-from app import config
 import logging
 from datetime import datetime
+
 from pythonjsonlogger import jsonlogger
+
+from app import config
 
 
 class CustomJsonFormatter(jsonlogger.JsonFormatter):
@@ -16,10 +18,15 @@ class CustomJsonFormatter(jsonlogger.JsonFormatter):
             log_record["level"] = record.levelname
 
 
-modules = ["requests", "selenium", "urllib3", "pyppeteer", "websockets", "asyncio"]
+def suppress_module_logging():
+    """Suppress the logging messages from certain modules to prevent noisy logs"""
+    modules = ["requests", "urllib3", "pyppeteer", "websockets", "asyncio"]
 
-for module in modules:
-    logging.getLogger(module).setLevel(logging.WARNING)
+    for module in modules:
+        logging.getLogger(module).setLevel(logging.WARNING)
+
+
+suppress_module_logging()
 
 logging.getLogger().setLevel(config.LOGGING_LEVEL)
 logger = logging.getLogger(__name__)
