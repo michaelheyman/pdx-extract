@@ -115,8 +115,7 @@ def get_instructor(rec):
         return "TBD"
 
     instructor_name = instructor_name.split(", ", maxsplit=1)
-    if len(instructor_name) > 1:
-        return f"{instructor_name[1]} {instructor_name[0]}"
-    else:
-        # TODO: add a test for this scenario. why is this returning an 'Instructor: ' prefix?
-        return f"Instructor: {instructor_name}"
+    if len(instructor_name) < 1:
+        return None
+
+    return f"{instructor_name[1]} {instructor_name[0]}"
