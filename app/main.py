@@ -135,14 +135,14 @@ async def run():
     cookies = dict(JSESSIONID=session_id)
     terms = get_terms(cookies, unique_session_id)
 
-    payload = []
+    payload = {}
     for term in terms:
         subjects = get_subjects(cookies, unique_session_id, term["code"])
         subjects_json = await get_subjects_json(subjects, term, cookies, page)
         courses = sanitize.get_courses(subjects_json)
-        payload.append(courses)
+        payload[term["code"]] = courses
 
-    storage.upload_to_bucket(payload)
+    [storage.upload_to_bucket({key: value}) for key, value in payload.items()]
 
     await browser.close()
     return payload
