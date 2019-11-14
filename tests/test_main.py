@@ -233,7 +233,7 @@ async def test_run_returns_empty_payload_when_no_results(
     mock_get_tokens.assert_called
     mock_get_terms.assert_called
     mock_upload_to_bucket.assert_called
-    assert payload == []
+    assert payload == {}
 
 
 @pytest.mark.asyncio
@@ -276,5 +276,4 @@ async def test_run_returns_payload(
     mock_get_terms.assert_called
     mock_get_subjects_json.assert_called
     mock_upload_to_bucket.assert_called
-    assert payload[0][0]["crn"] == 10883
-    # error on get_subects in main where it makes a request
+    assert payload["201904"][0]["crn"] == 10883

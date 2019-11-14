@@ -31,7 +31,7 @@ def authenticate_current_session(term, unique_session_id, cookies):
     }
     return requests.post(
         urls.SEARCH_URL,
-        headers={"referer": urls.INIT_URL},
+        headers={"Referer": urls.INIT_URL},
         cookies=cookies,
         params=payload,
     )
@@ -60,7 +60,7 @@ def get_schedule_json(subject, term, unique_session_id, cookies):
     }
     res = requests.get(
         urls.SCHEDULE_URL,
-        headers={"referer": urls.CLASS_URL},
+        headers={"Referer": urls.CLASS_URL},
         cookies=cookies,
         params=payload,
     )
@@ -92,10 +92,10 @@ def get_subjects(cookies, unique_session_id, term_date):
     }
     res = requests.get(urls.SUBJECTS_URL, cookies=cookies, params=payload)
 
-    if res.ok:
-        return res.json()
+    if not res.ok:
+        return None
 
-    return None
+    return res.json()
 
 
 def get_terms(cookies, unique_session_id):
@@ -129,19 +129,20 @@ async def run():
 
     if None in (session_id, unique_session_id):
         browser.close()
+        logger.error("Failed to get tokens from session.")
         return
 
     cookies = dict(JSESSIONID=session_id)
     terms = get_terms(cookies, unique_session_id)
 
-    payload = []
+    payload = {}
     for term in terms:
         subjects = get_subjects(cookies, unique_session_id, term["code"])
         subjects_json = await get_subjects_json(subjects, term, cookies, page)
         courses = sanitize.get_courses(subjects_json)
-        payload.append(courses)
+        payload[term["code"]] = courses
 
-    storage.upload_to_bucket(payload)
+    [storage.upload_to_bucket({key: value}) for key, value in payload.items()]
 
     await browser.close()
     return payload
