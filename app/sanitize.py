@@ -28,7 +28,7 @@ def get_courses(subjects_json):
 def get_course_data(course):
     """Gets the course data by parsing it from the course record.
 
-    :param record: Dictionary containing the course record.
+    :param course: Dictionary containing the course record.
     :returns:      Simpler dictionary with pruned attributes.
     """
     course_data = dict()
@@ -101,7 +101,7 @@ def get_term_description(record):
     return " ".join(term.split(" ")[0:2])
 
 
-def get_instructor(rec):
+def get_instructor(record):
     """Gets instructor from a course record.
 
     :param record: Dictionary containing the course record.
@@ -110,7 +110,7 @@ def get_instructor(rec):
                    Instructor first name and last name if it exists.
     """
     try:
-        instructor_name = rec["faculty"][0]["displayName"]
+        instructor_name = record["faculty"][0]["displayName"]
     except (KeyError, IndexError):
         return "TBD"
 

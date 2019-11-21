@@ -8,8 +8,7 @@ async def initialize():
 
     Doesn't open or close browser, that responsibility is left to the caller.
 
-    Returns:
-        Browser: A Pyppeteer browser.
+    :return: A Pyppeteer browser.
     """
     args = ["--no-sandbox", "--disable-setuid-sandbox", "--ignore-certificate-errors"]
     browser = await pyppeteer.launch(args=args, headless=True)
@@ -18,10 +17,10 @@ async def initialize():
 
 
 async def get_page(browser):
-    """ Accesses a page via the Pyppeteer browser.
+    """Accesses a page via the Pyppeteer browser.
 
-    Parameters:
-        Browser: A Pyppeteer browser.
+    :param browser: A Pyppeteer browser
+    :return:        A Pyppeteer page
     """
     page = await browser.newPage()
     await page.goto(INIT_URL)
@@ -33,7 +32,7 @@ async def get_tokens(browser):
     successful response from HTTP requests.
 
     :param browser: Instantiated pyppeteer browser
-    :returns: The JSESSIONID and uniqueSessionId
+    :returns:       The JSESSIONID and uniqueSessionId
     """
     page = await browser.newPage()
     await page.goto(INIT_URL)
@@ -45,6 +44,11 @@ async def get_tokens(browser):
 
 
 async def get_jsession_id(page):
+    """Gets the JSESSIONID from the cookies.
+
+    :param page: Pyppeteer page object
+    :return:     JSESSIONID cookie
+    """
     cookies = await page.cookies(INIT_URL)
     cookies = {cookie["name"]: cookie["value"] for cookie in cookies}
 
@@ -52,6 +56,14 @@ async def get_jsession_id(page):
 
 
 async def get_unique_session_id(page):
+    """Gets the unique session id from the page.
+
+    Calls native JavaScript to get the session id. This is the reason why the
+    project needs Pyppeteer.
+
+    :param page: Pyppeteer page object
+    :return:     The unique session id
+    """
     unique_session_id = await page.evaluate("sessionStorage.getItem(STORAGE)")
 
     return unique_session_id

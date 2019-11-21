@@ -8,13 +8,12 @@ from app.logger import logger
 
 
 def upload_to_bucket(contents):
-    """
-    Uploads contents to Cloud Storage bucket.
+    """Uploads contents to Cloud Storage bucket.
 
-    Parameters:
-        contents (Object): The contents to put in the bucket
+    :param contents: The contents to put in the bucket
+    :return:         None
     """
-    assert isinstance(contents, (dict)), f"Expected dict but got {type(contents)}"
+    assert isinstance(contents, dict), f"Expected dict but got {type(contents)}"
     storage_client = storage.Client()
     bucket_name = config.BUCKET_NAME
     bucket = storage_client.lookup_bucket(bucket_name)
@@ -40,14 +39,14 @@ def upload_to_bucket(contents):
 
 
 def write_lambda_file(filename, contents):
-    """ Saves content to lambda filename.
+    """Saves content to lambda filename.
 
     Saves contents to a filename and writes them to a /tmp/ directory in the Cloud Function.
     Cloud Functions only have write access to their /tmp/ directory.
 
-    Parameters:
-        filename (String): The filename to write the data to.
-        contents (Object): The contents to put in the bucket.
+    :param filename: The filename to write the data to.
+    :param contents: The contents to put in the bucket.
+    :return:         The created lambda filename
     """
     lambda_filename = f"/tmp/{filename}"
 
