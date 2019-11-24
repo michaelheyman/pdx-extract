@@ -1,0 +1,11 @@
+#!/bin/sh
+
+BUCKET=pdx-schedule-unprocessed-data
+FUNCTION_NAME=extract
+
+gcloud functions deploy $FUNCTION_NAME \
+  --timeout=540 \
+  --memory=1024MB \
+  --runtime python37 \
+  --trigger-topic=pdx-extract \
+  --region us-central1

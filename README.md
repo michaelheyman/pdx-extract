@@ -68,11 +68,7 @@ pytest --cov-report html --cov=app tests/
 
 ## Deploying Cloud Function
 
-Run the following command from the root of the project to deploy the Cloud Function
-
-```bash
-gcloud functions deploy extract --timeout=540 --memory=1024MB --runtime python37 --trigger-topic=pdx-extract --region us-central1
-```
+Run the `deploy` script at the root of the project to deploy the Cloud Function.
 
 There is the potential to reduce the memory requirements of the Function.
 
